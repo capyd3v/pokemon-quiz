@@ -6,12 +6,22 @@ import random
 import requests
 import json
 from typing import List, Dict
+import os
 
 app = FastAPI(title="Pokémon Quiz")
 
+# Configurar directorios
+current_dir = os.path.dirname(os.path.abspath(__file__))
+static_dir = os.path.join(current_dir, "static")
+templates_dir = os.path.join(current_dir, "templates")
+
+# Crear directorios si no existen
+os.makedirs(static_dir, exist_ok=True)
+os.makedirs(templates_dir, exist_ok=True)
+
 # Montar archivos estáticos
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
-templates = Jinja2Templates(directory="app/templates")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+templates = Jinja2Templates(directory=templates_dir)
 
 # Cache para Pokémon
 pokemon_cache = {}
@@ -33,7 +43,8 @@ def get_pokemon_data(pokemon_id: int) -> Dict:
             }
             pokemon_cache[pokemon_id] = pokemon_data
             return pokemon_data
-    except:
+    except Exception as e:
+        print(f"Error obteniendo Pokémon {pokemon_id}: {e}")
         return None
 
 def get_random_pokemon() -> Dict:
@@ -59,7 +70,12 @@ async def home(request: Request):
     """Página principal del quiz"""
     pokemon = get_random_pokemon()
     if not pokemon:
-        return templates.TemplateResponse("error.html", {"request": request})
+        # Si falla, usar un Pokémon por defecto
+        pokemon = {
+            "name": "pikachu",
+            "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+            "types": ["electric"]
+        }
     
     options = get_random_options(pokemon)
     
