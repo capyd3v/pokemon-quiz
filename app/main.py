@@ -49,7 +49,7 @@ def get_pokemon_data(pokemon_id: int) -> Dict:
 
 def get_random_pokemon() -> Dict:
     """Obtiene un Pokémon aleatorio"""
-    pokemon_id = random.randint(1, 151)  # Primera generación (1-151)
+    pokemon_id = random.randint(1, 600)  # Primera generación (1-151)
     return get_pokemon_data(pokemon_id)
 
 def get_random_options(correct_pokemon: Dict, count: int = 4) -> List[str]:
@@ -57,7 +57,7 @@ def get_random_options(correct_pokemon: Dict, count: int = 4) -> List[str]:
     options = [correct_pokemon["name"]]
     
     while len(options) < count:
-        random_id = random.randint(1, 151)
+        random_id = random.randint(1, 600)
         pokemon = get_pokemon_data(random_id)
         if pokemon and pokemon["name"] not in options:
             options.append(pokemon["name"])
