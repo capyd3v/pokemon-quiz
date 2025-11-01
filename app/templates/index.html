@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 Pokémon Quiz 🎮</h1>
+            <p>¿Adivina qué Pokémon es?</p>
+        </header>
+
+        <main>
+            <div class="quiz-container">
+                <div class="pokemon-image">
+                    <img id="pokemon-sprite" src="{{ pokemon_sprite }}" alt="¿Quién es este Pokémon?" crossorigin="anonymous">
+                </div>
+                
+                <div class="types" id="types-container">
+                    {% for type in pokemon_types %}
+                    <span class="type-badge type-{{ type }}">{{ type.title() }}</span>
+                    {% endfor %}
+                </div>
+
+                <form id="quiz-form">
+                    <input type="hidden" id="correct-answer" value="{{ correct_answer }}">
+                    
+                    <div class="options-grid">
+                        {% for option in options %}
+                        <button type="button" class="option-btn" data-name="{{ option }}">
+                            {{ option.title() }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                </form>
+
+                <div class="feedback" id="feedback"></div>
+                
+                <button id="next-btn" class="next-btn" style="display: none;">
+                    Siguiente Pokémon →
+                </button>
+
+                <div class="stats">
+                    <p>Aciertos: <span id="correct-count">0</span> | Errores: <span id="wrong-count">0</span></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', path='script.js') }}"></script>
+</body>
+</html>
